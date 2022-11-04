@@ -21,12 +21,12 @@ def ang_corr(bins,bins2,output_file):
 
 		nthreads = 4
 		autocorr=1
-		DD_counts = DDtheta_mocks(autocorr, nthreads, theta, bins[i]['RA'], bins[i]['DEC'])
+		DD_counts = DDtheta_mocks(autocorr=1, nthreads, theta, bins[i]['RA'], bins[i]['DEC'])
 		DDs.append(DD_counts)
 		
-		RR_counts = DDtheta_mocks(autocorr, nthreads, theta, bins2[i]['RA'], bins2[i]['DEC'])
+		RR_counts = DDtheta_mocks(autocorr=1, nthreads, theta, bins2[i]['RA'], bins2[i]['DEC'])
 		RRs.append(RR_counts)
-		DR_counts = DDtheta_mocks(autocorr, nthreads, theta, bins[i]['RA'], bins[i]['DEC'], RA2=bins2[i]['RA'], DEC2=bins2[i]['DEC'],weights1=bins[i]['Weight'],weights2=bins2[i]['Weight'])
+		DR_counts = DDtheta_mocks(autocorr=0, nthreads, theta, bins[i]['RA'], bins[i]['DEC'], RA2=bins2[i]['RA'], DEC2=bins2[i]['DEC'],weights1=bins[i]['Weight'],weights2=bins2[i]['Weight'])
 		DRs.append(DR_counts)
 		
 	wtheta=[]
