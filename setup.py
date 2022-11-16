@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='catalog_org',
+setup(name='bao_pz',
 	version='0.1.0',
    	author='Paula Ferreira',
    	author_email='psilf12@gmail.com',
