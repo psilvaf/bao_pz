@@ -2,20 +2,41 @@ import numpy as np
 from astropy.io import fits
 from astropy.table import Table
 import os
+import time
+from multiprocessing import Pool
 
-def distz(pdfs,output_folder):
-	'''Finds the redshfit distribution for each bin
-	pdfs: pdf of each galaxy in each bin
-	output_folder: name of the output folder, the file will be .npy
+def distz(z_dist,binsize,survey_bins,output_folder):
+	
+	'''Computes the average number density of the spec-z distribution (not normalised)
+	z_dist(array): redshift distribution expected
+	binsize(int/array): size of photo-z PDF/defined bins
+	survey_bin(fits Table): data
+	output_folder(str): file path
+	
+	return: the number counts of the redshift of a z_dist
 	'''
 	
-	new_dist=[[] for i in range(len(pdfs))]
-	for i in range(len(pdfs)):
-		for j in range(len(pdfs[i])):
-			new_dist[i].append(np.mean(pdfs[i][j],axis=0))
-			
-	for k in new_dist:
-		np.save(output_folder+str(k), k)
+	COUNT=[[] for j in range(len(survey_bins))]
+	for l in range(len(survey_bins)):
+		for i in survey_bins[l]['Z']:
+			for j in z_dist:
+				if i==j:
+					COUNT[l].append(i)					
+				
+	for r in range(len(COUNT)):
+		np.save(output_folder+str(r),np.histogram(COUNT[r],bins=binsize))
 	return
 	
+def distzp(binsize,survey_bins,output_folder):
+	'''Computes the average number density of the spec-z distribution (not normalised)
+	binsize(float): size of photo-z PDF/defined bins
+	survey_bin(fits Table): data
+	output_folder(str): file path
 	
+	return the number counts of the photometric redshift of a z_dist
+	'''	
+	COUNT=[np.histogram(survey_bins[l]['Z'], bins=binsize) for l in range(len(survey_bins))]
+	
+	for r in range(len(COUNT)):
+		np.save(output_folder+str(r),COUNT[r])
+	return
