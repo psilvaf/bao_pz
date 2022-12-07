@@ -30,7 +30,8 @@ def distz(z_dist,binsize,survey_bins,output_folder):
 	for r in range(len(COUNT)):
 		np.save(output_folder+str(r),np.histogram(COUNT[r],bins=binsize))
 	return
-	
+
+
 def distzp(binsize,survey_bins,output_folder):
 	'''Computes the average number density of the spec-z distribution (not normalised)
 	binsize(float): size of photo-z PDF/defined bins
