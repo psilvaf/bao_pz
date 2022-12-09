@@ -2,8 +2,13 @@ README.md
 setup.py
 bao_pz/__init__.py
 bao_pz/angular_wtheta.py
+<<<<<<< Updated upstream
 bao_pz/dist_z.py
 bao_pz/npzp.py
+=======
+bao_pz/npzp.py
+bao_pz/nz.py
+>>>>>>> Stashed changes
 bao_pz/phi.py
 bao_pz/project_corr.py
 bao_pz.egg-info/PKG-INFO
