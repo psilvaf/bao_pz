@@ -3,8 +3,13 @@ setup.py
 bao_pz/__init__.py
 bao_pz/angular_wtheta.py
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 bao_pz/dist_z.py
 bao_pz/npzp.py
+=======
+bao_pz/npzp.py
+bao_pz/nz.py
+>>>>>>> Stashed changes
 =======
 bao_pz/npzp.py
 bao_pz/nz.py
