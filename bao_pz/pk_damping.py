@@ -1,12 +1,13 @@
 import numpy as np
 from scipy.integrate import quad
 from scipy.special import spherical_jn
+from colossus.cosmology import cosmology
 
 def no_wiggles_EH(cosmo_camb,z,k):
 	cosmo=cosmo_camb
 	T_cmb=cosmo.TCMB/2.7
 	h=cosmo.h
-	Om_0=cosmo.omch2+cosmo.ombh2
+	Om_0=cosmo.Om0+cosmo.ombh2
 	Ob_0=cosmo.ombh2
 
 	k_eq=7.46*Om_0/(T_cmb*100)**2
@@ -49,4 +50,8 @@ def sigma_tot2(mu,cosmo,q,bao_scale,k_s,z):
 	sigma_par2=Sigma2*(1+f)**2
 	return (mu**2)*sigma_par2+(1-mu)*Sigma2+(f*mu**2)*((mu**2) - 1)*delta_Sigma2
 	
+def bao_damping(z,):
+	cosmo = cosmology.setCosmology('planck18', interpolation = False, persistence = '')
+	D=cosmo.growthFactorUnnormalized(z)
+	f=((cosmo.omch2+cosmo.ombh2)/cosmo.h**2)**0.55 #flat cosmology
 	
