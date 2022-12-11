@@ -15,4 +15,5 @@ setup(name='bao_pz',
 	"numpy",
 	'scipy',
 	'pandas',
-	'Corrfunc',],)
+	'Corrfunc',
+	'colossus'],)
