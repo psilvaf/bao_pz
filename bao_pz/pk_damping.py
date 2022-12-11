@@ -3,6 +3,7 @@ from scipy.integrate import quad
 from scipy.special import spherical_jn
 from colossus.cosmology import cosmology
 
+
 def no_wiggles_EH(cosmo_camb,z,k):
 	cosmo=cosmo_camb
 	T_cmb=cosmo.TCMB/2.7
@@ -50,8 +51,28 @@ def sigma_tot2(mu,cosmo,q,bao_scale,k_s,z):
 	sigma_par2=Sigma2*(1+f)**2
 	return (mu**2)*sigma_par2+(1-mu)*Sigma2+(f*mu**2)*((mu**2) - 1)*delta_Sigma2
 	
-def bao_damping(z,):
-	cosmo = cosmology.setCosmology('planck18', interpolation = False, persistence = '')
-	D=cosmo.growthFactorUnnormalized(z)
+def bao_damping(cosmo,mu,z1,z2,k,Sigma2):
+
+	D1=cosmo.growthFactorUnnormalized(z1)
+	D2=cosmo.growthFactorUnnormalized(z2) #https://iopscience.iop.org/article/10.3847/1538-4365/aaee8c/pdf
 	f=((cosmo.omch2+cosmo.ombh2)/cosmo.h**2)**0.55 #flat cosmology
+	#numeric computation of P(k,mu,z,z')
+	p1=(b+f*mu**2)*(bprime+f*mu**2)D1*D2
+	p2=(cosmo.matterPowerSpectrum(k,0)-no_wiggles_EH(cosmo,z,k))*np.exp(Sigma2*k**2)+no_wiggles_EH(cosmo,z,k)#Eisenstein 98
+	return p1*p2
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+	
 	
