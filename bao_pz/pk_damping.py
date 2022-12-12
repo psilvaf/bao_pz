@@ -8,13 +8,12 @@ def no_wiggles_EH(cosmo_camb,z,k):
 	cosmo=cosmo_camb
 	T_cmb=cosmo.TCMB/2.7
 	h=cosmo.h
-	Om_0=cosmo.Om0+cosmo.ombh2
+	Om_0=cosmo.omch2+cosmo.ombh2
 	Ob_0=cosmo.ombh2
-
+	Ol_0=1-Om_0
 	k_eq=7.46*Om_0/(T_cmb*100)**2
 	sh=cosmo.h * 44.5 * np.log(9.83/Om_0)/np.sqrt(1 + 10 *Ob_0** 0.75)
-	k=p.array(k)
-	k=k[k>0]
+	#k=k[k>0]
 	ks=k*sh
 	q=k/(13.41*k_eq)
 	alpha=1-0.328*np.log(431*Om_0)*(Ob_0/Om_0)+.38*np.log(22.3*Om_0)*(Ob_0/Om_0)**2
@@ -23,7 +22,8 @@ def no_wiggles_EH(cosmo_camb,z,k):
 	L0 = np.log(2*np.e + 1.8 * q_eff)
 	C0 = 14.2 + 731.0 / (1 + 62.5 * q_eff)
 	T= L0 / (L0 + C0 * q_eff**2)
-	return T * cosmo.scale_independent_growth_factor(z)
+	f=((Om_0*(1+z)**3)/(Om_0*(1+z)+Ol_0-(Om_0+Ol_0-1)*(1+z)**2))**(.55)#flat cosmology
+	return T*f
 
 def Sigma2_integrand(k,cosmo,z,bao_scale):
 	Pnw=no_wiggles_EH(cosmo,z,k)
@@ -57,7 +57,7 @@ def bao_damping(cosmo,mu,z1,z2,k,Sigma2):
 	D2=cosmo.growthFactorUnnormalized(z2) #https://iopscience.iop.org/article/10.3847/1538-4365/aaee8c/pdf
 	f=((cosmo.omch2+cosmo.ombh2)/cosmo.h**2)**0.55 #flat cosmology
 	#numeric computation of P(k,mu,z,z')
-	p1=(b+f*mu**2)*(bprime+f*mu**2)D1*D2
+	p1=(b+f*mu**2)*(bprime+f*mu**2)*D1*D2
 	p2=(cosmo.matterPowerSpectrum(k,0)-no_wiggles_EH(cosmo,z,k))*np.exp(Sigma2*k**2)+no_wiggles_EH(cosmo,z,k)#Eisenstein 98
 	return p1*p2
 
