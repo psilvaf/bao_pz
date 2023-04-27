@@ -14,7 +14,7 @@ def bins(survey,z_name,num,path):
 	zbin=np.linspace(min(data[z_name]),max(data[z_name]),num)
 	with Pool() as pool:
 		for i in range(len(zbin)-1):
-			tab=data[(zbin[i]<=data[z_name]) & (data[z_name]<zbin[i+1])]
+			tab=data[(data[z_name]>zbin[i]) & (data[z_name]<=zbin[i+1])]
 			tabela=Table(tab)
 			files=path+str(i)+'.fits'
 			tabela.write(files,overwrite=True)
