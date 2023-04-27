@@ -1,20 +1,13 @@
 README.md
 setup.py
 bao_pz/__init__.py
+bao_pz/ang_cross.py
 bao_pz/angular_wtheta.py
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 bao_pz/dist_z.py
+bao_pz/get_bins.py
 bao_pz/npzp.py
-=======
-bao_pz/npzp.py
-bao_pz/nz.py
->>>>>>> Stashed changes
-=======
-bao_pz/npzp.py
-bao_pz/nz.py
->>>>>>> Stashed changes
 bao_pz/phi.py
+bao_pz/pk_damping.py
 bao_pz/project_corr.py
 bao_pz.egg-info/PKG-INFO
 bao_pz.egg-info/SOURCES.txt
