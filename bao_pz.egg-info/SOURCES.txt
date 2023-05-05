@@ -1,5 +1,6 @@
 README.md
 setup.py
+bao_pz/Resample.py
 bao_pz/__init__.py
 bao_pz/ang_cross.py
 bao_pz/angular_wtheta.py
