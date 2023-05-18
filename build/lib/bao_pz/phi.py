@@ -6,7 +6,7 @@ from multiprocessing import Pool
 from astropy.table import Table
 import time
 
-def Phi(z,z_dist,pdfs_bins,outputfile):
+def Phi(z_dist,pdfs_bins,outputfile):
 	'''
 	Computes the distribution of spec-z given the photo-z of a galaxy sample bin
 	with photo-z pdfs
@@ -22,10 +22,10 @@ def Phi(z,z_dist,pdfs_bins,outputfile):
 	z_count=[[[] for i in range(len(z_dist))] for j in range(len(pdfs_bins))]
 	with Pool() as pool:
 		for l in range(len(pdfs_bins)):
-			for i in range(len(pdfs_bins[l])):
+			for i in range(len(pdfs_bins[l]['pdf'])):
 				for j in range(len(z_dist)):
-					if not np.interp(z_dist[j],z_dist,pdfs_bins[l][i])==0:
-						z_count[l][j].append(np.interp(z[j],z_dist,pdfs_bins[l][i]))
+					if not np.interp(z_dist[j],z_dist,pdfs_bins[l]['pdf'][i])==0:
+						z_count[l][j].append(np.interp(z_dist[j],z_dist,pdfs_bins[l]['pdf'][i]))
 		phi0=[[] for i in range(len(z_count))]
 		f=[[] for i in range(len(z_count))]
 		f_w=[[] for i in range(len(z_count))]
