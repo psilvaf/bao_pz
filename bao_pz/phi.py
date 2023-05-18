@@ -24,7 +24,7 @@ def Phi(z,z_dist,pdfs_bins,outputfile):
 		for l in range(len(pdfs_bins)):
 			for i in range(len(pdfs_bins[l])):
 				for j in range(len(z_dist)):
-					if not np.interp(z[j],z_dist,pdfs_bins[l][i])==0:
+					if not np.interp(z_dist[j],z_dist,pdfs_bins[l][i])==0:
 						z_count[l][j].append(np.interp(z[j],z_dist,pdfs_bins[l][i]))
 		phi0=[[] for i in range(len(z_count))]
 		f=[[] for i in range(len(z_count))]
