@@ -25,7 +25,7 @@ def distz(z_dist,z_name,binsize,survey_bins,output_folder):
 	for l in range(len(survey_bins)):
 		for i in survey_bins[l][z_name]:
 			for j in z_dist:
-				if truncate(i,2)==j:
+				if truncate(i,2)==truncate(j,2):
 					COUNT[l].append(truncate(i,2))					
 				
 	for r in range(len(COUNT)):
@@ -34,7 +34,7 @@ def distz(z_dist,z_name,binsize,survey_bins,output_folder):
 
 
 def distzp(binsize,survey_bins,z_name,output_folder):
-	'''Computes the average number density of the spec-z distribution (not normalised)
+	'''Computes the average number density of the photo-z distribution (not normalised)
 	binsize(float): size of photo-z PDF/defined bins
 	survey_bin(fits Table): data
 	output_folder(str): file path
