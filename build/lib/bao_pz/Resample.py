@@ -26,7 +26,7 @@ def Distz(z_dist,zname,binsize,survey,output_folder):
 	return: the number counts of the redshift of a z_dist
 	'''
 	
-	COUNT=[i for i in survey[zname] for j in z_dist if truncate(i,2)==j]
+	COUNT=[i for i in survey[zname] for j in z_dist if truncate(i,3)==j]
 				
 				
 	np.save(output_folder,np.histogram(COUNT,bins=binsize))
@@ -48,5 +48,5 @@ def NZ_survey(n_train_zs,g_zp,n_train_zp,n_survey):
 	NZ_survey_zp=CubicSpline(n_survey[1][:-1],n_survey[0])
 	func=lambda zp: n_train_zs[0]*NZ_survey_zp(zp)*gzp(zp)/NZp(zp)
 	
-	return n_train_zs[1][:-1],integrate.quad_vec(func,0.6,1.1)[0]
+	return n_train_zs[1][:-1],integrate.quad_vec(func,0,2)[0]
 	

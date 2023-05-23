@@ -26,11 +26,11 @@ def distz(z_dist,z_name,binsize,survey_bins,output_folder):
 		for i in survey_bins[l][z_name]:
 			for j in z_dist:
 				if truncate(i,2)==truncate(j,2):
-					COUNT[l].append(truncate(i,2))					
-				
-	for r in range(len(COUNT)):
-		np.save(output_folder+str(r),np.histogram(COUNT[r],bins=binsize))
-	return
+					COUNT[l].append(i)					
+	
+	#for r in range(len(COUNT)):
+	#	np.save(output_folder+str(r),np.histogram(COUNT[r],bins=binsize))
+	return COUNT
 
 
 def distzp(binsize,survey_bins,z_name,output_folder):
