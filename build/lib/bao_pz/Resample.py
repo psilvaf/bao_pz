@@ -32,13 +32,13 @@ def Distz(z_dist,zname,binsize,survey,output_folder):
 	np.save(output_folder,np.histogram(COUNT,bins=binsize))
 	return 
 	
-def NZ_survey(n_train_zs,g_zp,n_train_zp,n_survey):
+def NZ_survey(n_train_zs,g_zp,n_train_zp,n_survey,z1,z2):
 	gzp=CubicSpline(g_zp[1][:-1],g_zp[0])
 	NZp=CubicSpline(n_train_zp[1][:-1],n_train_zp[0])
 	NZ_survey_zp=CubicSpline(n_survey[1][:-1],n_survey[0])
 	func=lambda zp: n_train_zs[0]*NZ_survey_zp(zp)*gzp(zp)/NZp(zp)
 	
-	return n_train_zs[1][:-1],integrate.quad_vec(func,0.6,1.1)[0]
+	return n_train_zs[1][:-1],integrate.quad_vec(func,z1,z2)[0]
 	
 def n_z(bins,zname,nz_survey):
 	count=[]
