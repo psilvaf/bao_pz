@@ -4,8 +4,9 @@ import os
 import pandas as pd
 from astropy.table import Table
 import time
+from scipy.interpolate import CubicSpline
 
-def Phi(z_dist,pdfs_bins,outputfile):
+def Phi(nz_survey,zp_survey,pdfs_bins,outputfile):
 	'''
 	Computes the distribution of spec-z given the photo-z of a galaxy sample bin
 	with photo-z pdfs
@@ -18,14 +19,17 @@ def Phi(z_dist,pdfs_bins,outputfile):
 	return: give the distributions normalized 
 	'''
 	start = time.time()
-	z_count=[[[] for i in range(len(z_dist))] for j in range(len(pdfs_bins))]
 
+
+	z_survey=nz_survey[0]
+	z_count=[[[] for i in range(len(z_survey))] for j in range(len(pdfs_bins))]
 	for l in range(len(pdfs_bins)):
 		for i in range(len(pdfs_bins[l]['pdf'])):
-			for j in range(len(z_dist)):
-				if not np.interp(z_dist[j],z_dist,pdfs_bins[l]['pdf'][i])==0:
-					z_count[l][j].append(np.interp(z_dist[j],z_dist,pdfs_bins[l]['pdf'][i]))
+			for j in range(len(z_survey)):
+				if not np.interp(z_survey[j],zp_survey,pdfs_bins[l]['pdf'][i])==0:
+					z_count[l][j].append(np.interp(z_survey[j],zp_survey,pdfs_bins[l]['pdf'][i]))
 	f_w=[[] for i in range(len(z_count))]
+	
 	for i in range(len(z_count)):
 		for j in range(len(z_count[i])):
 			f_w[i].append(np.sum(z_count[i][j])*len(z_count[i][j]))
@@ -36,3 +40,5 @@ def Phi(z_dist,pdfs_bins,outputfile):
 	end = time.time()
 	print(end - start)
 	return
+	
+

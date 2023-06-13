@@ -44,26 +44,13 @@ def NZ_survey(n_train_zs,g_zp,n_train_zp,n_survey):
 	
 	return n_train_zs[1][:-1],integrate.quad_vec(func,0,np.inf)[0]
 	
-def n_z(bins,zname,nz_survey,zp_survey):
-	'''
-	Computes the average distribution of redshift of each bin, used for both spec-z and photo-z
-	bins(dic/astropy table): the separation of the sample in bins
-	zname(str): name of the spec-z/photo-z column
-	nz_survey(2d array): output from NZ_survey 
-	return:  n_z
-	'''
-	
-	n_z_resampled=CubicSpline(nz_survey[0],nz_survey[1]/np.sum(nz_survey[1]))
-	z_survey=nz_survey[0][np.where(n_z_resampled(zp_survey)>10e-3)[0]]
+def n_z(bins,zname,nz_survey):
 	count=[]
-	bin_name=[]
 	for i in range(len(bins)):
-		count.append([np.where(abs(bins[i][zname]-k)<=.01) for k in z_survey])
-		bin_name.append(i)
+		count.append([np.where(abs(bins[i][zname]-k)<=.001) for k in nz_survey])
+
 	normalized_count=[np.array([len(i[0]) for i in j])/np.sum([len(i[0]) for i in j]) for j in count]
-	funcs=[CubicSpline(z_survey,np.nan_to_num(normalized_count[i]))(zp_survey) for i in range(len(normalized_count))]
-	return bin_name,funcs
-	
+	return normalized_count
 	
 
 
