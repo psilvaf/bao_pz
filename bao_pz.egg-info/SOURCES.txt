@@ -7,6 +7,7 @@ bao_pz/angular_wtheta.py
 bao_pz/dist_z.py
 bao_pz/get_bins.py
 bao_pz/npzp.py
+bao_pz/pdfs_cut.py
 bao_pz/phi.py
 bao_pz/pk_damping.py
 bao_pz/project_corr.py
