@@ -8,7 +8,7 @@ from Corrfunc.utils import convert_rp_pi_counts_to_wp
 from Corrfunc.mocks.DDrppi_mocks import DDrppi_mocks
 from astropy.cosmology import FlatLambdaCDM
 
-def p_corr(survey,random,output_file,weight_name,pimax=175,cosmology=FlatLambdaCDM(H0=70, Om0=0.25, Tcmb0=2.725,Ob0=0.044)):
+def p_corr(survey,random,output_file,weight_name,pimax=120,cosmology=FlatLambdaCDM(H0=70, Om0=0.25, Tcmb0=2.725,Ob0=0.044)):
 	# Setup the bins
 	print(cosmology)
 	dist=cosmology.comoving_distance(survey['Z'])	
@@ -18,7 +18,7 @@ def p_corr(survey,random,output_file,weight_name,pimax=175,cosmology=FlatLambdaC
 	#X2,Y2,Z2=dist2*random['mu'],dist2*np.sin(np.arccos(random['mu'])),dist2
 	print('random dists')
 	nthreads = 4
-	binfile=pjoin(dirname(abspath(Corrfunc.__file__)),"../mocks/tests/", "bins")
+	binfile=np.arange(40,175,5.)
 
 	autocorr=1
 
