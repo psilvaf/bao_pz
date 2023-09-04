@@ -23,11 +23,11 @@ def p_corr(survey,random,output_file,weight_name,pimax=120,cosmology=FlatLambdaC
 	autocorr=1
 
 	DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax, binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
-	print('DD')
+	np.save(output_file+'DD',DD_counts)
 	RR_counts = DDrppi_mocks(autocorr,2, nthreads,pimax, binfile,random['RA'],random['DEC'],dist2, weights1=random[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
-	print('RR')
+	np.save(output_file+'RR',RR_counts)
 	DR_counts = DDrppi_mocks(0,2, nthreads,pimax, binfile,survey['RA'],survey['DEC'],dist,weights1=survey[weight_name],RA2=random['RA'],DEC2=random['DEC'],CZ2=dist2,weights2=random[weight_name],weight_type='pair_product',is_comoving_dist=True)
-
+	np.save(output_file+'DR',DR_counts)
 	xi=convert_rp_pi_counts_to_wp(len(survey), len(survey), len(random), len(random),DD_counts['npairs'], DR_counts['npairs'],DR_counts['npairs'], RR_counts['npairs'],len(binfile)-1, pimax)
 	
 	np.save(output_file,xi)
