@@ -8,17 +8,17 @@ from Corrfunc.utils import convert_rp_pi_counts_to_wp
 from Corrfunc.mocks.DDrppi_mocks import DDrppi_mocks
 from astropy.cosmology import FlatLambdaCDM
 
-def p_corr(survey,random,output_file,weight_name,pimax=120,cosmology=FlatLambdaCDM(H0=70, Om0=0.25, Tcmb0=2.725,Ob0=0.044)):
+def p_corr(survey,random,output_file,weight_name,pimax=120/.6727,cosmology=FlatLambdaCDM(H0=67.27, Om0=0.3166, Tcmb0=2.725,Ob0=0.04884)):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
 	print(cosmology)
-	dist=cosmology.comoving_distance(survey['Z'])	
+	dist=cosmology.comoving_distance(survey['Z'])/0.6727
 	#X,Y,Z=dist*survey['mu'],dist*np.sin(np.arccos(survey['mu'])),dist
 	print('survey dists')
-	dist2=cosmology.comoving_distance(random['Z'])
+	dist2=cosmology.comoving_distance(random['Z'])/0.6727
 	#X2,Y2,Z2=dist2*random['mu'],dist2*np.sin(np.arccos(random['mu'])),dist2
 	print('random dists')
 	nthreads = 4
-	binfile=np.arange(40,175,5.)
+	binfile=np.arange(20,175,5.)/.6727 #Mpc/h
 
 	autocorr=1
 
