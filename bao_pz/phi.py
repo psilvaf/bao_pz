@@ -57,14 +57,19 @@ def wPhi(nz_survey,zp_survey,pdfs_bins,outputfile):
 
 
 	z_survey=nz_survey[0]
+	
 	z_count=[[[] for i in range(len(z_survey))] for j in range(len(pdfs_bins))]
 	for l in range(len(pdfs_bins)):
+		print('Bin:'+str(l),time.localtime())
 		for i in range(len(pdfs_bins[l]['pdf'])):
+			ratio=(pdfs_bins[l]['pdf'][i]/pdfs_bins[l]['wfkp_ross'][i])*np.sum(pdfs_bins[l]['wfkp_ross'])
 			for j in range(len(z_survey)):
-				if not np.interp(z_survey[j],zp_survey,pdfs_bins[l]['pdf'][i])==0:
-					z_count[l][j].append(np.interp(z_survey[j],zp_survey,(pdfs_bins[l]['pdf'][i]/pdfs_bins[l]['wfkp_ross'][i])*np.sum(pdfs_bins[l]['wfkp_ross'])))
-	f_w=[[] for i in range(len(z_count))]
-	
+				interpolation=np.interp(z_survey[j],zp_survey,ratio)
+				if not interpolation==0:
+					z_count[l][j].append(interpolation)
+					
+					
+	f_w=[[] for i in range(len(z_count))]	
 	for i in range(len(z_count)):
 		for j in range(len(z_count[i])):
 			f_w[i].append(np.sum(z_count[i][j])*len(z_count[i][j]))
