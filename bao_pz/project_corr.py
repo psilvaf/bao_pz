@@ -21,7 +21,7 @@ def p_corr(survey,random,output_file,weight_name,pimax=120,cosmology=FlatLambdaC
 	#X2,Y2,Z2=dist2*random['mu'],dist2*np.sin(np.arccos(random['mu'])),dist2
 	print('random dists')
 	nthreads = 4
-	binfile=np.arange(40,175,5.) #Mpc/h
+	binfile=np.arange(20,180,5.) #Mpc/h
 
 	autocorr=1
 
