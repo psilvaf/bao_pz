@@ -54,4 +54,43 @@ def function_3d(perp,par,xi_func):
     
 def spp(mu,perp): 
 	return mu*perp/((1-mu**2)**.5)
+	
+def get_func(ND,NR,DD,DR,RR,sperp, spar):
+    '''Computes the projected correlation function numerically by integrating over spar
+    ND(int) : number of galaxies
+    NR (int): number of random
+    DD(arr): pair count
+    DR(arr): pair count
+    RR(arr): pair count
+    sperp(arr): distance perp to the LOS
+    spar(arr): distance par to the LOS
+    
+    return: projected 2pcf normalized.
+    '''
+    dd = np.empty(len(sperp))
+    dr=np.empty(len(sperp))
+    rr=np.empty(len(sperp))
+    for i in range(len(sperp)):
+        dd[i] = np.sum(DD[i * len(spar):(i + 1) * len(spar)])/ND
+        dr[i] = np.sum(DR[i * len(spar):(i + 1) * len(spar)])/(ND*NR)
+        rr[i] = np.sum(RR[i * len(spar):(i + 1) * len(spar)])/NR
+    corr=(dd-2*dr+rr)/rr
+    return corr/np.nansum(corr)
+    
+def int_from_mu(perp,r,mu,xi,perp_size,par_size):
+	'''Computes the projected correlation function numerically by integrating over mu
+	
+	perp(arr): chosen perp separation 
+	r(arr): full separation in 3D
+	mu(arr): mu
+	xi(function): correlation function in 3D
+	perp_size(int): size of perp separation
+	par_size(int): size of par separation
+	
+	return: projected 2pcf (not normalised)	
+	'''
+	g= np.array([function_3d(perp,paralell(r,mu[i]),xi) for i in range(len(mu))]).sum(axis=0).sum(axis=1)
+	G=[np.sum(g[i * par_size:(i + 1) * par_size]) for i in range(perp_size)]
+	return G
+
 
