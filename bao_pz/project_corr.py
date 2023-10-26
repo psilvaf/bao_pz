@@ -9,19 +9,21 @@ from astropy.cosmology import FlatLambdaCDM
 from Corrfunc.utils import convert_3d_counts_to_cf
 from Corrfunc.utils import convert_rp_pi_counts_to_wp
 from scipy import interpolate,integrate
+from colossus.cosmology import cosmology
 
 
-def p_corr(survey,random,output_file,weight_name,pimax=120,cosmology=FlatLambdaCDM(H0=67.27, Om0=0.3166, Tcmb0=2.725,Ob0=0.04884)):# planck 18 TT, TE, EE, lowE
+def p_corr(survey,random,output_file,weight_name,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
-	print(cosmology)
-	dist=cosmology.comoving_distance(survey['Z'])/0.6727
+	cosmo=cosmology.setCosmology('planck18')
+	print(cosmo.h)
+	dist=cosmo.comovingDistance(z_min=survey['Z'], z_max=0.0, transverse=True)
 	#X,Y,Z=dist*survey['mu'],dist*np.sin(np.arccos(survey['mu'])),dist
 	print('survey dists')
-	dist2=cosmology.comoving_distance(random['Z'])/0.6727
+	dist2=cosmo.comovingDistance(z_min=random['Z'], z_max=0.0, transverse=True)
 	#X2,Y2,Z2=dist2*random['mu'],dist2*np.sin(np.arccos(random['mu'])),dist2
 	print('random dists')
 	nthreads = 4
-	binfile=np.arange(40,170,5.) #Mpc/h
+	binfile=np.arange(20,175,5.) #Mpc/h
 
 	autocorr=1
 
@@ -44,9 +46,6 @@ def window(mu):
         return 1 #np.random.normal(mu,.3)
     else:
         return 0
-        
-def interp_xi(perp,par,xi):
-	return interpolate.interp2d(perp,par,xi,kind='quintic',fill_value=True)
 
 def function_3d(perp,par,xi_func):
     wp=xi_func(perp,par)
