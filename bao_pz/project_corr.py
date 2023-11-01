@@ -14,6 +14,7 @@ from colossus.cosmology import cosmology
 
 def p_corr(survey,random,output_file,weight_name,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
+	
 	cosmo=cosmology.setCosmology('planck18')
 	print(cosmo.h)
 	dist=cosmo.comovingDistance(z_min=survey['Z'], z_max=0.0, transverse=True)
@@ -88,7 +89,7 @@ def int_from_mu(perp,r,mu,xi,perp_size,par_size):
 	
 	return: projected 2pcf (not normalised)	
 	'''
-	g= np.array([function_3d(perp,paralell(r,mu[i]),xi) for i in range(len(mu))]).sum(axis=0).sum(axis=1)
+	g= np.array([window(mu[i])*function_3d(perp,paralell(r,mu[i]),xi) for i in range(len(mu))]).sum(axis=0).sum(axis=1)
 	G=[np.sum(g[i * par_size:(i + 1) * par_size]) for i in range(perp_size)]
 	return G
 

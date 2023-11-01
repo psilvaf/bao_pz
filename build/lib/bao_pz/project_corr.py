@@ -14,6 +14,7 @@ from colossus.cosmology import cosmology
 
 def p_corr(survey,random,output_file,weight_name,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
+	
 	cosmo=cosmology.setCosmology('planck18')
 	print(cosmo.h)
 	dist=cosmo.comovingDistance(z_min=survey['Z'], z_max=0.0, transverse=True)
@@ -46,9 +47,6 @@ def window(mu):
         return 1 #np.random.normal(mu,.3)
     else:
         return 0
-        
-def interp_xi(perp,par,xi):
-	return interpolate.interp2d(perp,par,xi,kind='quintic',fill_value=True)
 
 def function_3d(perp,par,xi_func):
     wp=xi_func(perp,par)
