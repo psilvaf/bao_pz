@@ -10,28 +10,38 @@ from Corrfunc.utils import convert_3d_counts_to_cf
 from Corrfunc.utils import convert_rp_pi_counts_to_wp
 from scipy import interpolate,integrate
 from colossus.cosmology import cosmology
+from multiprocessing import Pool
+cosmo=cosmology.setCosmology('planck18')
 
-
+def opt_dist(x):
+    return cosmo.comovingDistance(z_min=x, z_max=0.0, transverse=True)
+    
+    
 def p_corr(survey,random,output_file,weight_name,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
-	
-	cosmo=cosmology.setCosmology('planck18')
-	print(cosmo.h)
-	dist=cosmo.comovingDistance(z_min=survey['Z'], z_max=0.0, transverse=True)
+		
+	dist=np.empty(len(survey['Z']))
+	with Pool() as p:
+        	dist=p.map(opt_dist, survey['Z'])
 
-	print('survey dists')
+
+	
 	
 	nthreads = 8
 	binfile=np.arange(20,175,5.) #Mpc/h
 
 	autocorr=1
-
-	DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax, binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
+	print('Counting DD')
+	DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
 	np.save(output_file+'DD',DD_counts)
-	dist2=cosmo.comovingDistance(z_min=random['Z'], z_max=0.0, transverse=True)
-	print('random dists')
+	dist2=np.empty(len(random['Z']))
+	with Pool() as p:
+		dist2=p.map(opt_dist, random['Z'])
+
+	print('Counting RR')
 	RR_counts = DDrppi_mocks(autocorr,2, nthreads,pimax, binfile,random['RA'],random['DEC'],dist2, weights1=random[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
 	np.save(output_file+'RR',RR_counts)
+	print('Counting DR')
 	DR_counts = DDrppi_mocks(0,2, nthreads,pimax, binfile,survey['RA'],survey['DEC'],dist,weights1=survey[weight_name],RA2=random['RA'],DEC2=random['DEC'],CZ2=dist2,weights2=random[weight_name],weight_type='pair_product',is_comoving_dist=True)
 	np.save(output_file+'DR',DR_counts)
 	return 
