@@ -5,3 +5,9 @@ Summary: An awesome package that does something
 Author: Paula Ferreira
 Author-email: psilf12@gmail.com
 License: LICENSE.txt
+Requires-Dist: astropy
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: pandas
+Requires-Dist: Corrfunc
+Requires-Dist: colossus

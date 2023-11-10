@@ -10,28 +10,38 @@ from Corrfunc.utils import convert_3d_counts_to_cf
 from Corrfunc.utils import convert_rp_pi_counts_to_wp
 from scipy import interpolate,integrate
 from colossus.cosmology import cosmology
+from multiprocessing import Pool
+cosmo=cosmology.setCosmology('planck18')
 
-
+def opt_dist(x):
+    return cosmo.comovingDistance(z_min=x, z_max=0.0, transverse=True)
+    
+    
 def p_corr(survey,random,output_file,weight_name,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
+		
+	dist=np.empty(len(survey['Z']))
+	with Pool() as p:
+        	dist=p.map(opt_dist, survey['Z'])
+
+
 	
-	cosmo=cosmology.setCosmology('planck18')
-	print(cosmo.h)
-	dist=cosmo.comovingDistance(z_min=survey['Z'], z_max=0.0, transverse=True)
-	#X,Y,Z=dist*survey['mu'],dist*np.sin(np.arccos(survey['mu'])),dist
-	print('survey dists')
-	dist2=cosmo.comovingDistance(z_min=random['Z'], z_max=0.0, transverse=True)
-	#X2,Y2,Z2=dist2*random['mu'],dist2*np.sin(np.arccos(random['mu'])),dist2
-	print('random dists')
-	nthreads = 4
+	
+	nthreads = 8
 	binfile=np.arange(20,175,5.) #Mpc/h
 
 	autocorr=1
-
-	DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax, binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
+	print('Counting DD')
+	DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
 	np.save(output_file+'DD',DD_counts)
+	dist2=np.empty(len(ramdom['Z']))
+	with Pool() as p:
+		dist2=p.map(opt_dist, random['Z'])
+
+	print('Counting RR')
 	RR_counts = DDrppi_mocks(autocorr,2, nthreads,pimax, binfile,random['RA'],random['DEC'],dist2, weights1=random[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
 	np.save(output_file+'RR',RR_counts)
+	print('Counting DR')
 	DR_counts = DDrppi_mocks(0,2, nthreads,pimax, binfile,survey['RA'],survey['DEC'],dist,weights1=survey[weight_name],RA2=random['RA'],DEC2=random['DEC'],CZ2=dist2,weights2=random[weight_name],weight_type='pair_product',is_comoving_dist=True)
 	np.save(output_file+'DR',DR_counts)
 	return 
@@ -42,11 +52,11 @@ def paralell(r,mu):
 def perp(r,mu):
 	return r*(1-mu**2)**.5
 
-def window(mu):
-    if 0<=mu<0.8:
-        return 1 #np.random.normal(mu,.3)
+def window(x):
+    if 0<x<20/.6:
+        return 1
     else:
-        return 0
+        return 0.0
 
 def function_3d(perp,par,xi_func):
     wp=xi_func(perp,par)
@@ -75,7 +85,8 @@ def get_func(ND,NR,DD,DR,RR,sperp, spar):
         dr[i] = np.sum(DR[i * len(spar):(i + 1) * len(spar)])/(ND*NR)
         rr[i] = np.sum(RR[i * len(spar):(i + 1) * len(spar)])/NR
     corr=(dd-2*dr+rr)/rr
-    return corr/np.nansum(corr)
+    sigma=np.mean(np.round(corr,3))
+    return corr-sigma
     
 def int_from_mu(perp,r,mu,xi,perp_size,par_size):
 	'''Computes the projected correlation function numerically by integrating over mu
