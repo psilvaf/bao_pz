@@ -17,23 +17,20 @@ def opt_dist(x):
     return cosmo.comovingDistance(z_min=x, z_max=0.0, transverse=True)
     
     
-def p_corr(survey,random,output_file,weight_name,pimax=120):# planck 18 TT, TE, EE, lowE
+def p_corr(survey,random,output_file,weight_name,n_threads,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
 		
 	dist=np.empty(len(survey['Z']))
 	with Pool() as p:
         	dist=p.map(opt_dist, survey['Z'])
 
-
-	
-	
-	nthreads = 8
+	nthreads = n_threads
 	binfile=np.arange(20,175,5.) #Mpc/h
 
 	autocorr=1
-	print('Counting DD')
-	DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
-	np.save(output_file+'DD',DD_counts)
+	#print('Counting DD')
+	#DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
+	#np.save(output_file+'DD',DD_counts)
 	dist2=np.empty(len(random['Z']))
 	with Pool() as p:
 		dist2=p.map(opt_dist, random['Z'])

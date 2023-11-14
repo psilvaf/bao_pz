@@ -23,9 +23,9 @@ def Distz(z_dist,zname,binsize,survey,output_folder):
 	'''
 	
 	COUNT=np.histogram(survey[zname][np.where(abs(z_dist-survey[zname])<=.01)],bins=binsize)
+	count=np.vstack((COUNT[0],COUNT[1][:-1]))		
 				
-				
-	np.save(output_folder,COUNT)
+	np.save(output_folder,count,allow_pickle=True)
 	return 
 	
 def NZ_survey(n_train_zs,g_zp,n_train_zp,n_survey):
@@ -37,12 +37,12 @@ def NZ_survey(n_train_zs,g_zp,n_train_zp,n_survey):
 	n_survey(2d-array): histogram output of the whole photo-z survey with the same bin separation as n_train_zs and n_train_zp
 	return: spec_z_survey,NZ_survey
 	'''
-	gzp=CubicSpline(g_zp[1][:-1],g_zp[0]/np.sum(g_zp[0]))
-	NZp=CubicSpline(n_train_zp[1][:-1],n_train_zp[0]/np.sum(n_train_zp[0]))
-	NZ_survey_zp=CubicSpline(n_survey[1][:-1],n_survey[0]/np.sum(n_survey[0]))
+	gzp=CubicSpline(g_zp[1],g_zp[0]/np.sum(g_zp[0]))
+	NZp=CubicSpline(n_train_zp[1],n_train_zp[0]/np.sum(n_train_zp[0]))
+	NZ_survey_zp=CubicSpline(n_survey[1],n_survey[0]/np.sum(n_survey[0]))
 	func=lambda zp: n_train_zs[0]*NZ_survey_zp(zp)*gzp(zp)/NZp(zp)
 	
-	return n_train_zs[1][:-1],integrate.quad_vec(func,0,np.inf)[0]
+	return n_train_zs[1],integrate.quad_vec(func,0,np.inf)[0]
 	
 def n_z(bins,zname,nz_survey):
 	count=[]
