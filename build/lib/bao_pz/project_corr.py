@@ -15,8 +15,23 @@ cosmo=cosmology.setCosmology('planck18')
 
 def opt_dist(x):
     return cosmo.comovingDistance(z_min=x, z_max=0.0, transverse=True)
-    
-    
+
+
+def DD_mock(survey,output_file,n_threads,pimax=120):
+        # Setup the bins
+
+        dist=np.empty(len(survey['Z']))
+        with Pool() as p:
+                dist=p.map(opt_dist, survey['Z'])
+
+        nthreads = n_threads
+        binfile=np.arange(20,175,5.) #Mpc/h
+
+        autocorr=1
+        print('Counting DD')
+        DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,np.float32(survey['RA']+10),np.float32(survey['DEC']),np.float32(dist), weights1=np.float32([1.]*len(survey)),weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
+        np.save(output_file+'DD',DD_counts)
+
 def p_corr(survey,random,output_file,weight_name,n_threads,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
 		
