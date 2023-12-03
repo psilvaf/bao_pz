@@ -21,10 +21,18 @@ def zp(binsize,z_name,survey_bins,output_folder):
 	return
 
 def npdf_zp(bins):
+    '''
+    Finds the mode of the n(z) values for a bin and computes the representative n(z) from that bin.
+    bins(fits/Table): the bins information, where the pdf column must be named 'pdf'
+    Return (arr):  the n_p(z_p) for each bin.
+    
+    '''
     pdf_Count=[[np.histogram(bins[i]['pdf'].T[j]) for j in range(len(bins[i]['pdf'].T))] for i in range(len(bins))]
     maximum=[[] for i in range(len(pdf_Count))]
     for i in range(len(pdf_Count)):
         for j in range(len(pdf_Count[i])):
             maximum[i].append(pdf_Count[i][j][1][np.where(pdf_Count[i][j][0] == max(pdf_Count[i][j][0]))])
     matrix=np.array([np.array([maximum[i][j][0] for i in range(len(maximum))]) for j in range(len(maximum[0]))])
-    return np.array(maximum[i]).T[0]/max(np.array(maximum[i]).T[0])
+    return matrix.T
+
+
