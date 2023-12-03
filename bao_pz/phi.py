@@ -81,4 +81,3 @@ def wPhi(nz_survey,zp_survey,pdfs_bins,outputfile):
 	print(end - start)
 	return
 
-def 

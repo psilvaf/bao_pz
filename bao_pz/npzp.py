@@ -34,3 +34,5 @@ def npdf_zp(bins):
             maximum[i].append(pdf_Count[i][j][1][np.where(pdf_Count[i][j][0] == max(pdf_Count[i][j][0]))])
     matrix=np.array([np.array([maximum[i][j][0] for i in range(len(maximum))]) for j in range(len(maximum[0]))])
     return np.array(maximum[i]).T[0]/max(np.array(maximum[i]).T[0])
+
+
