@@ -80,4 +80,5 @@ def wPhi(nz_survey,zp_survey,pdfs_bins,outputfile):
 	end = time.time()
 	print(end - start)
 	return
-	
+
+def 
