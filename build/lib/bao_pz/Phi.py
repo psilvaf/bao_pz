@@ -32,7 +32,7 @@ def compute_phi(f,nz,npzp,z):
 	'''
 	
 	f_func=CubicSpline(z,f)
-	nz_func=CubicSpline(z,nz/np.sum(nz))
-	npzp_func=CubicSpline(z,npzp/np.sum(npzp))
+	nz_func=CubicSpline(z,nz/np.max(nz))
+	npzp_func=CubicSpline(z,npzp/np.max(npzp))
 	phi=lambda z: f_func(z)*nz_func(z)/npzp_func(z)
 	return phi

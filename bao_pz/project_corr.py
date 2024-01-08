@@ -77,7 +77,7 @@ def function_3d(perp,par,xi_func):
 def spp(mu,perp): 
 	return mu*perp/((1-mu**2)**.5)
 	
-def get_func(ND,NR,DD,DR,RR,sperp, spar):
+def get_func(ND,NR,DD,DR,RR,sperp, spar,n):
     '''Computes the projected correlation function numerically by integrating over spar
     ND(int) : number of galaxies
     NR (int): number of random
@@ -96,8 +96,8 @@ def get_func(ND,NR,DD,DR,RR,sperp, spar):
         dd[i] = np.sum(DD[i * len(spar):(i + 1) * len(spar)])/ND
         dr[i] = np.sum(DR[i * len(spar):(i + 1) * len(spar)])/(ND*NR)
         rr[i] = np.sum(RR[i * len(spar):(i + 1) * len(spar)])/NR
-    corr=(dd-2*dr+rr)/rr
-    sigma=np.mean(np.round(corr,3))
+    corr=(dd-2*dr+rr)/(rr)
+    sigma=np.mean(np.round(corr,n))
     return corr-sigma
     
 def int_from_mu(perp,r,mu,xi,perp_size,par_size):
