@@ -1,7 +1,13 @@
 Metadata-Version: 2.1
-Name: bao-pz
+Name: bao_pz
 Version: 0.1.0
 Summary: An awesome package that does something
 Author: Paula Ferreira
 Author-email: psilf12@gmail.com
 License: LICENSE.txt
+Requires-Dist: astropy
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: Corrfunc
+Requires-Dist: pandas
+Requires-Dist: colossus
