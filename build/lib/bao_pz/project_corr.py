@@ -32,20 +32,20 @@ def DD_mock(survey,output_file,n_threads,pimax=120):
         DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,np.float32(survey['RA']+10),np.float32(survey['DEC']),np.float32(dist), weights1=np.float32([1.]*len(survey)),weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
         np.save(output_file+'DD',DD_counts)
 
-def p_corr(survey,random,output_file,weight_name,n_threads,pimax=120):# planck 18 TT, TE, EE, lowE
+def p_corr(survey,random,output_file,weight_name,zname,n_threads,pimax=120):# planck 18 TT, TE, EE, lowE
 	# Setup the bins
 		
-	dist=np.empty(len(survey['Z']))
+	dist=np.empty(len(survey[zname]))
 	with Pool() as p:
-        	dist=p.map(opt_dist, survey['Z'])
+        	dist=p.map(opt_dist, survey[zname])
 
 	nthreads = n_threads
 	binfile=np.arange(20,175,5.) #Mpc/h
 
 	autocorr=1
-	#print('Counting DD')
-	#DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
-	#np.save(output_file+'DD',DD_counts)
+	print('Counting DD')
+	DD_counts = DDrppi_mocks(autocorr,2, nthreads,pimax,binfile,survey['RA'],survey['DEC'],dist, weights1=survey[weight_name],weight_type='pair_product',output_rpavg=True, is_comoving_dist=True)
+	np.save(output_file+'DD',DD_counts)
 	dist2=np.empty(len(random['Z']))
 	with Pool() as p:
 		dist2=p.map(opt_dist, random['Z'])

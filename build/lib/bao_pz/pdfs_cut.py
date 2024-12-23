@@ -43,3 +43,5 @@ def find_gaussians(data,x,output,n=2):
 	gaussian=np.where((.9<res/mu2_s2) & (res/mu2_s2<=1))[0]
 	Table(data[gaussian]).write(output,format='fits',overwrite=True)
 	return 
+
+

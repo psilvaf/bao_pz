@@ -32,10 +32,24 @@ def find_multi_modal(data,redshift_name,pdf_name,num_of_peaks):
 	return less_peaks
 	
 def moments(pdf,x,n):
+    '''pdf(arr): PDf
+    n (int): statistical moment
+    x(array): variable range
+    '''
 	mu_n=pdf*(x)**n
 	return np.sum(mu_n)
 	
 def find_gaussians(data,x,output,n=2):
+
+    '''
+    Selects the PDFs that are nearly Gaussian.
+    
+    data (fits loaded file/ astropy Table)
+    x
+    output (str): output file directory
+    n (int): statistical moment
+    x(array): variable range
+    '''
 	pdf=data['pdf']
 	mu2_s2=(data['Z_err']**2)+data['Z']**2
 	res=np.array([moments(pdf[i],np.linspace(0,2,len(data['pdf'][0])),2) for i in range(len(data))])
@@ -43,3 +57,5 @@ def find_gaussians(data,x,output,n=2):
 	gaussian=np.where((.9<res/mu2_s2) & (res/mu2_s2<=1))[0]
 	Table(data[gaussian]).write(output,format='fits',overwrite=True)
 	return 
+
+

@@ -8,6 +8,21 @@ from astropy.table import Table
 import time
 
 def bins(survey,z_name,path,zp1,zp2,width):
+    '''
+    Divides the survey in redhsift bins
+    survey (str): fits file name
+    z_name (str): name of the photo-z  column name
+    path (str): name of the output fits files
+    zp1 (float): lowest redshift
+    zp2 (float): highest redshift
+    width (float): bin separation
+    
+    return:
+    fits files for each bin
+    '''
+
+
+
 	start = time.time()
 	
 	data = fits.open(os.path.join(survey))[1].data
